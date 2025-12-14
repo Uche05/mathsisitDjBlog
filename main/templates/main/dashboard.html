@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard · Maths Notes{% endblock %}
+
+{% block content %}
+<h1>Your dashboard</h1>
+<p class="muted small">Manage your maths posts here.</p>
+
+<div style="margin: 12px 0;">
+  <a class="btn" href="{% url 'post_create' %}">Create new post</a>
+</div>
+
+<div class="posts">
+  {% for post in my_posts %}
+    <article class="post-card">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+        <div>
+          <h3 style="margin:0;font-size:16px">{{ post.title }}</h3>
+          <div class="small muted">{{ post.created_at|date:"M j, Y H:i" }} · {{ post.status }}</div>
+        </div>
+        <div class="post-actions">
+          <a class="btn ghost" href="{% url 'post_edit' post.slug %}">Edit</a>
+          <a class="btn danger" href="{% url 'post_delete' post.slug %}">Delete</a>
+        </div>
+      </div>
+    </article>
+  {% empty %}
+    <p class="muted small">You haven’t created any posts yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}
