@@ -196,27 +196,48 @@ The `Post` model stores each mathematics blog article, linking it to a `User` (t
 ```
 ## ERD (Entity Relationship Diagram)
 
-The core relationship in the application is between Django’s `User` model and the custom `Post` model:
++---------------------------+     1      1     +---------------------------+
+|           User            |----------------->|          Profile          |
++---------------------------+                  +---------------------------+
+| id (PK)                   |                  | id (PK)                  |
+| username                  |                  | user_id (FK → User.id)   |
+| email                     |                  +---------------------------+
+| password (hashed)         |
+| is_staff                  |
+| is_superuser              |
+| is_active                 |
++---------------------------+
+          |
+          | 1
+          |        ∞
+          v
++---------------------------+
+|           Post            |
++---------------------------+
+| id (PK)                  |
+| author_id (FK → User.id) |
+| title                    |
+| slug (unique)            |
+| content                  |
+| created_at               |
+| updated_at               |
+| status                   |
++---------------------------+
+          |
+          | 1
+          |        ∞
+          v
++---------------------------+
+|         Comment           |
++---------------------------+
+| id (PK)                  |
+| post_id (FK → Post.id)   |
+| author_id (FK → User.id) |
+| content                  |
+| created_at               |
+| approved                 |
++---------------------------+
 
-- One **User** can create **many Posts**
-- Each **Post** belongs to **one User**
-
-This is a classic one-to-many relationship:
-
-```+---------------------------+        1        ∞     +---------------------------+
-|           User            |---------------------->|           Post            |
-+---------------------------+                        +---------------------------+
-| id (PK)                   |                        | id (PK)                  |
-| username                  |                        | author_id (FK → User.id) |
-| email                     |                        | title                    |
-| password (hashed)         |                        | slug                     |
-| date_joined               |                        | content                  |
-| is_active                 |                        | created_at               |
-| is_staff                  |                        | updated_at               |
-| is_superuser              |                        | status                   |
-+---------------------------+                        +---------------------------+```
-
----
 ```
 
 # Features
