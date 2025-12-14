@@ -1,0 +1,1 @@
+web: gunicorn mathblog.wsgi

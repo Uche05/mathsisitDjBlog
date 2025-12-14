@@ -120,6 +120,7 @@ grpc-interceptor==0.15.4
 grpcio==1.63.0
 grpcio-status==1.62.3
 gspread==6.1.4
+gunicorn==20.1.0
 h11==0.16.0
 h5py==3.11.0
 html5lib==1.1
