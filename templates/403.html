@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Page not found · Maths Notes{% endblock %}
+
+{% block content %}
+<div class="error-page" role="alert" aria-labelledby="err403">
+    <div class="big">403</div>
+    <div>
+        <h2 id="err403">Forbidden</h2>
+        <p class="muted small">
+            You don’t have permission to access this page. Try going back home or contacting the site administrator.
+        </p>
+        <div style="margin-top:12px">
+            <a class="btn" href="{% url 'home' %}">Go home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

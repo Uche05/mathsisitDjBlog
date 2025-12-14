@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Register · Maths Notes{% endblock %}
+
+{% block content %}
+<section aria-labelledby="registerTitle">
+    <h1 id="registerTitle">Create an account</h1>
+    <p class="inline-note small">
+        Choose a username, email, and a strong password. Errors will be shown inline.
+    </p>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        {% for field in form %}
+        <div>
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+            <div class="inline-note small">{{ field.help_text|safe }}</div>
+            {% endif %}
+            {% if field.errors %}
+            <div class="error">
+                {{ field.errors|striptags }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <div class="flex" style="margin-top:8px">
+            <button class="btn full" type="submit">Register</button>
+        </div>
+
+        <p class="small" style="margin-top:10px;">
+            Already have an account?
+            <a href="{% url 'login' %}">Login here</a>.
+        </p>
+    </form>
+</section>
+{% endblock %}

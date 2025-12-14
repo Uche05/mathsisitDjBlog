@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Page not found · Maths Notes{% endblock %}
+
+{% block content %}
+<div class="error-page" role="alert" aria-labelledby="err404">
+    <div class="big">404</div>
+    <div>
+        <h2 id="err404">Page not found</h2>
+        <p class="muted small">
+            The page you’re looking for doesn’t exist. Try going back home or checking the URL.
+        </p>
+        <div style="margin-top:12px">
+            <a class="btn" href="{% url 'home' %}">Go home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}{{ form_title }} · Maths Notes{% endblock %}
+
+{% block content %}
+<section aria-labelledby="formTitle">
+    <h1 id="formTitle">{{ form_title }}</h1>
+    <p class="inline-note small">
+        Title and content are required. Validation errors will appear under the fields.
+    </p>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="error">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        {% for field in form %}
+        <div>
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+            <div class="inline-note small">{{ field.help_text }}</div>
+            {% endif %}
+            {% if field.errors %}
+            <div class="error">
+                {{ field.errors|striptags }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <div class="flex" style="margin-top:8px">
+            <button class="btn" type="submit">Save</button>
+            <a class="btn ghost" href="{% url 'dashboard' %}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
