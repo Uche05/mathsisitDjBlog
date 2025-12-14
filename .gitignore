@@ -12,3 +12,4 @@ dist/
 env.py
 index.html
 github_issues_import.csv
+db.sqlite3
