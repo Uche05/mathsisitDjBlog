@@ -4,6 +4,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.core.paginator import Paginator
 
 from .forms import LoginForm, PostForm, RegisterForm
 from .models import Post
@@ -15,8 +16,19 @@ def home(request):
 
 
 def post_list(request):
-    posts = Post.objects.filter(status="published").order_by("-created_at")
-    return render(request, "main/post_list.html", {"posts": posts})
+    posts_qs = Post.objects.filter(status="published").order_by("-created_at")
+
+    # the use of paginator: choose how many posts per page
+    paginator = Paginator(posts_qs, 6)  # ✅ change 6 to whatever feels right
+
+    # read page number from the URL querystring (?page=2)
+    page_number = request.GET.get("page")
+
+    # get the requested page (safe: handles invalid pages gracefully)
+    page_obj = paginator.get_page(page_number)
+
+    # pass page_obj into template
+    return render(request, "main/post_list.html", {"page_obj": page_obj})
 
 
 def post_detail(request, slug):
@@ -26,9 +38,13 @@ def post_detail(request, slug):
 
 @login_required
 def dashboard(request):
-    my_posts = Post.objects.filter(author=request.user).order_by("-created_at")
-    return render(request, "main/dashboard.html", {"my_posts": my_posts})
+    my_posts_qs = Post.objects.filter(author=request.user).order_by("-created_at")
 
+    paginator = Paginator(my_posts_qs, 6)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "main/dashboard.html", {"page_obj": page_obj})
 
 @login_required
 def post_create(request):

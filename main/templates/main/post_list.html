@@ -9,7 +9,8 @@
     </p>
 
     <div class="posts" style="margin-top:12px">
-        {% for post in posts %}
+        {# loop over the paginated page object #}
+        {% for post in page_obj %}
         <article class="post-card">
             <div style="display:flex;justify-content:space-between;gap:10px">
                 <div>
@@ -31,5 +32,33 @@
         <p class="muted small">No posts yet.</p>
         {% endfor %}
     </div>
+
+    {# pagination controls (only show if more than 1 page) #}
+    {% if page_obj.paginator.num_pages > 1 %}
+    <ul class="pagination justify-content-center" style="margin-top:16px">
+        {% if page_obj.has_previous %}
+        <li>
+            <a href="?page={{ page_obj.previous_page_number }}" class="page-link">
+                &laquo; PREV
+            </a>
+        </li>
+        {% endif %}
+
+        {# helpful page indicator for UX #}
+        <li class="page-item disabled">
+            <span class="page-link">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+
+        {% if page_obj.has_next %}
+        <li>
+            <a href="?page={{ page_obj.next_page_number }}" class="page-link">
+                NEXT &raquo;
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+    {% endif %}
 </section>
 {% endblock %}
