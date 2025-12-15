@@ -37,11 +37,18 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 if not SECRET_KEY:
     raise ValueError("The SECRET_KEY environment variable is not set.")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False').lower() in ['true', '1', 't']
-
 # For development and deployment
 DJANGO_ENV = os.getenv('DJANGO_ENV')
+
+if not DJANGO_ENV:
+    raise ValueError("The DJANGO_ENV environment variable is not set.")
+
+# Security settings: only apply in production
+if DJANGO_ENV.lower() == 'production':
+    DEBUG = False
+
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = ['.herokuapp.com', 'localhost','127.0.0.1']
 
@@ -56,10 +63,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
+    'django_summernote',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -91,13 +100,6 @@ WSGI_APPLICATION = 'mathblog.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))

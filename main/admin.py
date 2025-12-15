@@ -3,6 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 from .models import Profile, Post, Comment
+from django_summernote.admin import SummernoteModelAdmin
 
 
 @admin.register(Profile)
@@ -11,12 +12,13 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 @admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(SummernoteModelAdmin):
+    # keep your useful admin features
     list_display = ("title", "author", "status", "created_at")
     list_filter = ("status", "created_at")
     search_fields = ("title", "content", "author__username")
-    prepopulated_fields = {"slug": ("title",)}  # optional
-
+    prepopulated_fields = {"slug": ("title",)}
+    summernote_fields = ("content",) #enable summernote for content field
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
