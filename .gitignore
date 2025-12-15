@@ -14,3 +14,4 @@ index.html
 github_issues_import.csv
 db.sqlite3
 .env
+mathblog/__pycache__/settings.cpython-312.pyc
