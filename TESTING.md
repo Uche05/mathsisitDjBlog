@@ -31,38 +31,72 @@ This file documents all testing practices performed for the project, fulfilling 
 
 ## 1.1 Model Tests
 
-* Post model creates correctly
-* Timestamps function
-* Author relationship validated
+Automated tests were written to verify core model behaviour:
 
-PASSED
+* Post model instances create correctly
+* Author–Post relationship is enforced
+* Slug fields are auto-generated from titles
+* Slugs remain unique when duplicate titles are used
+* Timestamp fields populate correctly
+
+All model tests passed successfully.
 
 ## 1.2 View Tests
 
-* Homepage loads with 200 status
-* Blog detail view loads
-* Dashboard requires login
-* Create/Edit/Delete views require authentication
-* Unauthorized attempts redirect appropriately
 
-ENCOUNTERED ERROR DUE TO TESTING SCRIPT:
-Change proposed: 
+The following view behaviours were tested using Django’s test client:
+
+* Homepage loads successfully with HTTP 200
+* Blog list page loads successfully
+* Published blog detail pages return HTTP 200
+* Draft blog posts return HTTP 404 for anonymous users
+* Dashboard requires user authentication
+* Create, Edit, and Delete views require authentication
+* Non-authors cannot edit or delete posts they do not own
+
+During testing, an initial failure occurred when attempting to access a draft
+post as an anonymous user. This resulted in a 404 response, which was confirmed
+to be correct behaviour based on the application’s access rules.
+
+The test was updated to explicitly check:
+- Published posts return HTTP 200
+- Draft posts return HTTP 404 for unauthenticated users
+
+After this correction, all view tests passed successfully.
 
 ## 1.3 Form Tests
 
-* Title required
-* Content required
-* Invalid submissions rerender with errors
+Form validation was tested to ensure data integrity:
 
-PASSED
+* Title field is required
+* Content field is required
+* Content length validation is enforced
+* Invalid submissions do not create database records
+* Validation errors are returned to the user correctly
+
+All form tests passed successfully.
+
 
 ## 1.4 Authentication Tests
 
-* Valid login → redirects to dashboard
-* Invalid login → displays error message
-* Logout clears session
+Authentication workflows were tested to confirm secure access:
 
-PASSED
+* Valid login redirects the user correctly
+* Invalid login attempts display error feedback
+* Logout clears the authenticated session
+* Protected routes redirect unauthenticated users
+
+All authentication tests passed successfully.
+
+### Test Execution
+
+All automated tests were executed using Django’s test runner:
+
+python manage.py test
+
+A separate test database was created and destroyed automatically for each run,
+ensuring isolation and repeatability of test results.
+
 
 # 2. JavaScript Tests
 
@@ -129,73 +163,37 @@ Validated using W3C CSS Validator.
 
 ### Python
 
-Checked with flake8 linting.
+Python code was validated using flake8 to ensure PEP8 compliance.
 
-Here are the errors it initally brought out:
-``main/admin.py:4:1: F811 redefinition of unused 'admin' from line 1
-main/admin.py:21:37: E261 at least two spaces before inline comment
-main/admin.py:21:38: E262 inline comment should start with '# '
-main/admin.py:23:1: E302 expected 2 blank lines, found 1
+Initial linting identified issues such as:
+- Line length violations
+- Unused imports and variables
+- Spacing and formatting inconsistencies
+- Test file formatting issues
 
-main/forms.py:37:80: E501 line too long (95 > 79 characters)
-main/forms.py:38:80: E501 line too long (101 > 79 characters)
-main/forms.py:44:80: E501 line too long (82 > 79 characters)
-
-main/models.py:11:80: E501 line too long (87 > 79 characters)
-
-main/test_auth.py:4:1: F401 '.models.Post' imported but unused
-main/test_auth.py:6:1: E302 expected 2 blank lines, found 1   
-main/test_auth.py:8:9: F841 local variable 'resp' is assigned to but never used
-main/test_auth.py:20:9: F841 local variable 'resp' is assigned to but never used
-main/test_auth.py:26:25: E128 continuation line under-indented for visual indent
-
-main/test_dashboard_views.py:6:1: E302 expected 2 blank lines, found 1
-
-main/test_forms.py:22:80: E501 line too long (80 > 79 characters)
-main/test_forms.py:60:80: E501 line too long (85 > 79 characters)
-
-main/test_models.py:5:1: E302 expected 2 blank lines, found 1 
-
-main/test_views.py:32:9: F841 local variable 'resp' is assigned to but never used
-main/test_views.py:38:80: E501 line too long (94 > 79 characters)
-main/test_views.py:43:9: F841 local variable 'resp' is assigned to but never used
-main/test_views.py:65:9: F841 local variable 'resp' is assigned to but never used
-main/test_views.py:77:9: F841 local variable 'resp' is assigned to but never used
-main/test_views.py:90:9: F841 local variable 'resp' is assigned to but never used
-main/test_views.py:97:9: F841 local variable 'resp' is assigned to but never used
-
-main/tests.py:1:1: F401 'django.test.TestCase' imported but unused
-
-main/urls.py:14:1: W293 blank line contains whitespace        
-main/urls.py:18:2: W292 no newline at end of file
-
-main/views.py:5:1: F401 'django.http.Http404' imported but unused
-main/views.py:14:80: E501 line too long (86 > 79 characters)  
-main/views.py:41:80: E501 line too long (82 > 79 characters)  
-main/views.py:49:1: E302 expected 2 blank lines, found 1      
-main/views.py:76:80: E501 line too long (80 > 79 characters)  
-main/views.py:101:80: E501 line too long (82 > 79 characters) 
-main/views.py:120:13: F841 local variable 'user' is assigned to but never used
+These were addressed where appropriate. Auto-generated migration files were
+excluded from strict linting, as recommended by Django best practices.
 
 
-..not too important to lint:
-main/migrations\0001_initial.py:20:80: E501 line too long (117 > 79 characters)
-main/migrations\0001_initial.py:21:80: E501 line too long (145 > 79 characters)
-main/migrations\0001_initial.py:27:80: E501 line too long (117 > 79 characters)
-main/migrations\0001_initial.py:29:80: E501 line too long (84 > 79 characters)
-main/migrations\0001_initial.py:33:80: E501 line too long (135 > 79 characters)
-main/migrations\0001_initial.py:34:80: E501 line too long (142 > 79 characters)
-main/migrations\0001_initial.py:43:80: E501 line too long (117 > 79 characters)
-main/migrations\0001_initial.py:47:80: E501 line too long (145 > 79 characters)
-main/migrations\0001_initial.py:48:80: E501 line too long (130 > 79 characters)``
----
 
 # 7. Bug Tracking
 
-| Bug     | Description                    | Fix                    |
-| ------- | ------------------------------ | ---------------------- |
-| Example | Incorrect redirect after login | Updated redirect logic |
+| Bug | Description | Resolution |
+|-----|------------|------------|
+| Draft post returned 404 during testing | Anonymous user attempted to access draft post | Test updated to reflect correct access control |
+| Missing dependency error during tests | WhiteNoise not installed locally | Added dependency to requirements |
+
+All critical bugs discovered during development and testing were resolved.
+
 
 Any remaining minor bugs are documented here.
 
 ---
+
+## Testing Conclusion
+
+All core application functionality has been verified through a combination of
+automated and manual testing. CRUD operations, authentication, permissions,
+and data validation behave as expected.
+
+

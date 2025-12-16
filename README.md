@@ -22,7 +22,6 @@ All sensitive data (SECRET_KEY, database URL, etc.) is handled securely using en
 
   * [Colour Scheme](#colour-scheme)
   * [Typography](#typography)
-  * [Wireframes](#wireframes)
   * [Flow Diagram](#flow-diagram)
   * [ERD](#erd)
 * [Features](#features)
@@ -36,10 +35,10 @@ All sensitive data (SECRET_KEY, database URL, etc.) is handled securely using en
 
 ## Mock-Up Screenshots
 
-*Add your screenshots here:*
+<img src="documentation/home.png" alt="Homepage mockup">
 
 ```
-<img src="documentation/homepage.png" alt="Homepage mockup">
+<img src="documentation/home.png" alt="Homepage mockup">
 <img src="documentation/blogposts.png" alt="Blog posts page">
 ```
 
@@ -126,13 +125,6 @@ Fonts selected for readability:
 
 ---
 
-## Wireframes
-
-```
-<img src="documentation/wireframes.png" alt="Wireframes">
-```
-
----
 
 ## Flow Diagram
 
@@ -275,6 +267,11 @@ The `Post` model stores each mathematics blog article, linking it to a `User` (t
 * **Django Framework**
 * **HTML5, CSS3, JavaScript**
 * **SQLite (development)**
+* **Django Test Framework (unittest-based)**
+* **WhiteNoise (static file handling in production)**
+* **Ruff / Flake8 (PEP8 linting)**
+* **Black (code formatting)**
+
 
 ### Developer and Deployment Tools
 
@@ -303,8 +300,36 @@ The project was developed using Agile principles with:
 * **GitHub Issues** with labels
 * **Kanban board** for sprint organisation
 
+- Throughout development, features were implemented incrementally and verified using
+automated tests before progressing to the next task. Bugs and regressions discovered
+during testing were logged and resolved immediately to ensure stable feature delivery.
+
+# Testing
+## Testing
+
+Testing was carried out throughout development using Django’s built-in testing framework.
+
+The project includes automated tests covering:
+- CRUD functionality for blog posts (Create, Read, Update, Delete)
+- Access control and permissions (author vs non-author)
+- Authentication workflows (register, login, logout)
+- Form validation and error handling
+- Model logic such as slug generation and uniqueness
+- Dashboard behaviour and user-specific content filtering
+
+Tests were run regularly using:
+
+python manage.py test
+
+All tests passed successfully after resolving edge cases related to draft post visibility
+and production middleware configuration.
+
 
 # Deployment
+Before deployment, all automated tests were executed locally to ensure production
+stability. Deployment-specific issues (such as missing middleware dependencies)
+were identified through test failures and resolved prior to final release.
+
 
 The Mathematics Learning Blog was deployed to a cloud platform using these steps:
 
