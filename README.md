@@ -99,7 +99,9 @@ This project was created for:
 * Search functionality
 * Post categories and tags
 * LaTeX/MathJax rendering for equations
-* Bookmark or favourite posts
+* Bookmark or favourite post
+* Profile pictures and author pages
+* Comment system with moderation
 
 ---
 
