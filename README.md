@@ -371,6 +371,6 @@ Thanks to classmates, instructors, and mentors for feedback and guidance during 
 # 8. Summary
 
 All key requirements for a fully functioning CRUD application were tested thoroughly.
-Authentication, responsiveness, and database operations all behave as expected.
+Authentication, responsiveness, and database operations all behave as expected. This work involved some edits and suggestions from ChatGPT due to time constraints on my part plus what I took from the I think before I post blog lesson. Kind regards. 
 
 ---
