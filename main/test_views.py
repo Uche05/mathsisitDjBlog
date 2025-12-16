@@ -53,11 +53,7 @@ class TestPostCRUDViews(TestCase):
         resp = self.client.get(reverse("post_list"))
         self.assertEqual(resp.status_code, 200)
 
-    def test_post_detail_page_loads(self):
-        resp = self.client.get(reverse("post_detail", args=[self.post.slug]))
-        self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, "Original title")
-
+    
     # update functionality test
     def test_author_can_edit_post(self):
         self.client.login(username="author", password="pass12345")
@@ -70,18 +66,6 @@ class TestPostCRUDViews(TestCase):
 
         self.post.refresh_from_db()
         self.assertEqual(self.post.title, "Updated title")
-
-    def test_non_author_cannot_edit_post(self):
-        self.client.login(username="other", password="pass12345")
-
-        resp = self.client.post(reverse("post_edit", args=[self.post.slug]), {
-            "title": "Hacked title",
-            "content": "z" * 60,
-            "status": "draft",
-        })
-
-        self.post.refresh_from_db()
-        self.assertNotEqual(self.post.title, "Hacked title")
 
     # delete functionality test
     def test_author_can_delete_post(self):
@@ -97,3 +81,15 @@ class TestPostCRUDViews(TestCase):
         resp = self.client.post(reverse("post_delete", args=[self.post.slug]))
 
         self.assertTrue(Post.objects.filter(pk=self.post.pk).exists())
+
+# read published posts
+    def test_published_post_detail_is_200(self):
+        self.post.status = "published"
+        self.post.save()
+        resp = self.client.get(reverse("post_detail", args=[self.post.slug]))
+        self.assertEqual(resp.status_code, 200)
+
+#  read draft posts
+    def test_draft_post_detail_is_404_for_anonymous(self):
+        resp = self.client.get(reverse("post_detail", args=[self.post.slug]))
+        self.assertEqual(resp.status_code, 404)

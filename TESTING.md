@@ -118,7 +118,8 @@ This ensured:
 
 ### HTML
 
-Validated with.
+I could not continue validating with W3C Validator as it introduced errors due to it being a Django Template.
+
 
 ### CSS
 
