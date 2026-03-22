@@ -1,56 +1,175 @@
 {% extends 'base.html' %}
-{% block title %}Dashboard · Maths Notes{% endblock %}
+{% block title %}Dashboard &middot; MathsIsIt Notes{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-user-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 25px;
+        color: white;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .dashboard-user-avatar {
+        width: 80px;
+        height: 80px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+    }
+    
+    .dashboard-user-info {
+        flex: 1;
+    }
+    
+    .dashboard-user-name {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0 0 5px;
+    }
+    
+    .dashboard-user-email {
+        opacity: 0.9;
+        margin: 0 0 10px;
+        font-size: 0.9rem;
+    }
+    
+    .dashboard-user-stats {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .dashboard-stat {
+        text-align: center;
+    }
+    
+    .dashboard-stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    
+    .dashboard-stat-label {
+        font-size: 0.8rem;
+        opacity: 0.8;
+    }
+    
+    .dashboard-user-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .dashboard-user-actions .btn {
+        background: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.3);
+        color: white;
+    }
+    
+    .dashboard-user-actions .btn:hover {
+        background: rgba(255,255,255,0.3);
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<h1>Your dashboard</h1>
-<p class="muted small">Manage your maths posts here.</p>
-
-<div style="margin: 12px 0;">
-  <a class="btn" href="{% url 'post_create' %}">Create new post</a>
+<div class="dashboard-header">
+    <h1>Your Dashboard</h1>
+    <a href="{% url 'post_create' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Create New Note
+    </a>
 </div>
 
-<div class="posts">
-  {#  Loop over the paginated page object instead of my_posts #}
+<!-- User Profile Card -->
+<div class="dashboard-user-card">
+    <div class="dashboard-user-avatar">
+        <i class="fas fa-user-graduate"></i>
+    </div>
+    <div class="dashboard-user-info">
+        <h2 class="dashboard-user-name">{{ user.get_full_name|default:user.username }}</h2>
+        <p class="dashboard-user-email">@{{ user.username }} · {{ user.email }}</p>
+        <div class="dashboard-user-stats">
+            <div class="dashboard-stat">
+                <div class="dashboard-stat-value">{{ page_obj.paginator.count }}</div>
+                <div class="dashboard-stat-label">Notes</div>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-user-actions">
+        <a href="{% url 'profile_edit' %}" class="btn">
+            <i class="fas fa-edit"></i> Edit Profile
+        </a>
+    </div>
+</div>
+
+<p class="text-secondary mb-3">Manage your mathematics notes here.</p>
+
+<div class="posts-grid">
+  {# Loop over the paginated page object instead of my_posts #}
   {% for post in page_obj %}
     <article class="post-card">
-      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
-        <div>
-          <h3 style="margin:0;font-size:16px">{{ post.title }}</h3>
-          <div class="small muted">{{ post.created_at|date:"M j, Y H:i" }} · {{ post.status }}</div>
+      <div class="post-card-header">
+        <div style="flex: 1;">
+          <h3>{{ post.title }}</h3>
+          <div class="post-meta">
+            <span class="post-meta-item"><i class="fas fa-calendar"></i> {{ post.created_at|date:"M j, Y H:i" }}</span>
+            <span class="post-meta-item"><i class="fas fa-tag"></i> {{ post.status }}</span>
+          </div>
         </div>
-        <div class="post-actions">
-          <a class="btn ghost" href="{% url 'post_edit' post.slug %}">Edit</a>
-
-          <a class="btn danger" href="{% url 'post_delete' post.slug %}">Delete</a>
+        <div class="post-card-badges">
+            <span class="difficulty-badge {{ post.difficulty }}">
+                <i class="fas fa-signal"></i> {{ post.get_difficulty_display }}
+            </span>
+            {% if post.category %}
+            <span class="category-tag">
+                <i class="fas fa-folder"></i> {{ post.category.name }}
+            </span>
+            {% endif %}
         </div>
+      </div>
+      <div class="post-actions">
+          <a href="{% url 'post_edit' post.slug %}" class="btn btn-ghost">
+            <i class="fas fa-edit"></i> Edit
+          </a>
+          <a href="{% url 'post_delete' post.slug %}" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+          </a>
       </div>
     </article>
   {% empty %}
-    <p class="muted small">You haven’t created any posts yet.</p>
+  <div class="text-center text-muted" style="grid-column: 1/-1; padding: 40px;">
+    <p>You haven't created any notes yet.</p>
+    <a href="{% url 'post_create' %}" class="btn btn-primary mt-2">
+      <i class="fas fa-plus"></i> Create Your First Note
+    </a>
+  </div>
   {% endfor %}
 </div>
 
-{#  Pagination controls (only show if there is more than 1 page) #}
+{# Pagination controls (only show if there is more than 1 page) #}
 {% if page_obj.paginator.num_pages > 1 %}
-<ul class="pagination justify-content-center" style="margin-top:16px">
+<ul class="pagination">
   {% if page_obj.has_previous %}
   <li>
-    <a href="?page={{ page_obj.previous_page_number }}" class="page-link">
-      &laquo; PREV
+    <a href="?page={{ page_obj.previous_page_number }}">
+      <i class="fas fa-chevron-left"></i> Prev
     </a>
   </li>
   {% endif %}
 
-  <li class="page-item disabled">
-    <span class="page-link">
-      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-    </span>
+  <li class="disabled">
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
   </li>
 
   {% if page_obj.has_next %}
   <li>
-    <a href="?page={{ page_obj.next_page_number }}" class="page-link">
-      NEXT &raquo;
+    <a href="?page={{ page_obj.next_page_number }}">
+      Next <i class="fas fa-chevron-right"></i>
     </a>
   </li>
   {% endif %}
