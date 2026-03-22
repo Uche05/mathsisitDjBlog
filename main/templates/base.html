@@ -4,58 +4,206 @@
 <html lang="en">
     <head>
         <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <title>{% block title %}Maths Notes{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{% block title %}MathsIsIt Notes{% endblock %}</title>
+        <meta name="description" content="MathsIsIt Notes - Clear reasoning, quick proofs, intuition-first mathematics explanations">
         <link rel="stylesheet" href="{% static 'main/css/base.css' %}">
+        {% block extra_css %}{% endblock %}
         <link rel="shortcut icon" href="{% static 'main/images/favicon.svg' %}" type="image/x-icon">
+        <!-- FontAwesome for icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <!-- KaTeX for math rendering -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+        <!-- MathLive for math input in forms -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mathlive@0.99.3/dist/fonts/mathlive-fonts.css">
+        <script defer src="https://cdn.jsdelivr.net/npm/mathlive@0.99.3/dist/mathlive.min.js"></script>
     </head>
 
+    <body>
+        <div class="shell" role="application" aria-label="MathsIsIt Notes">
+            
+            <!-- Header -->
+            <header class="site-header">
+                <div class="header-content">
+                    <a href="{% url 'home' %}" class="header-brand">
+                        <div class="logo" aria-hidden="true">MI</div>
+                        <div>
+                            <div class="site-title">MathsIsIt Notes</div>
+                            <div class="site-sub">Clear reasoning &bull; Quick proofs &bull; Intuition-first</div>
+                        </div>
+                    </a>
 
-<body>
-    <div class="shell" role="application" aria-label="Maths Blog">
+                    <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.main-nav').classList.toggle('active')">
+                        <i class="fas fa-bars"></i>
+                    </button>
 
-        <header>
-            <div class="logo" aria-hidden="true">MN</div>
-            <div>
-                <div class="site-title">Maths Notes</div>
-                <div class="site-sub">Clear reasoning · Quick proofs · Intuition-first</div>
-            </div>
+                    <nav class="main-nav" aria-label="Main navigation">
+                        <a href="{% url 'home' %}">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                        <a href="{% url 'post_list' %}">
+                            <i class="fas fa-book"></i> All Notes
+                        </a>
 
-            <nav aria-label="Main navigation">
-                <a href="{% url 'home' %}">Home</a>
-                <a href="{% url 'post_list' %}">All posts</a>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                        <a href="{% url 'post_create' %}" class="btn-primary">
+                            <i class="fas fa-plus"></i> New Note
+                        </a>
+                        <a href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                        {% else %}
+                        <a href="{% url 'register' %}">
+                            <i class="fas fa-user-plus"></i> Register
+                        </a>
+                        <a href="{% url 'login' %}">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                        {% endif %}
+                    </nav>
+                </div>
+            </header>
 
-                {% if user.is_authenticated %}
-                <a href="{% url 'dashboard' %}">Dashboard</a>
-                <button class="primary" onclick="window.location.href='{% url 'post_create' %}'">New post</button>
-                <a href="{% url 'logout' %}">Logout</a>
-                {% else %}
-                <a href="{% url 'register' %}">Register</a>
-                <a href="{% url 'login' %}">Login</a>
-                {% endif %}
-            </nav>
-        </header>
-
-        <main id="page" tabindex="-1" role="main">
-            {# Django messages #}
-            {% if messages %}
-            <div class="messages" aria-live="polite">
-                {% for message in messages %}
-                <div class="message {{ message.tags }}">{{ message }}</div>
-                {% endfor %}
-            </div>
+            <!-- User Sidebar Toggle Button -->
+            {% if user.is_authenticated %}
+            <button class="user-sidebar-toggle" aria-label="Toggle user panel" onclick="document.querySelector('.user-sidebar').classList.toggle('active')">
+                <i class="fas fa-user-circle"></i>
+            </button>
             {% endif %}
 
-            {% block content %}{% endblock %}
-        </main>
+            <!-- User Sidebar -->
+            {% if user.is_authenticated %}
+            <aside class="user-sidebar" aria-label="User profile">
+                <div class="user-sidebar-header">
+                    <h3><i class="fas fa-user-circle"></i> Your Profile</h3>
+                    <button class="sidebar-close" onclick="document.querySelector('.user-sidebar').classList.remove('active')" aria-label="Close sidebar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="user-sidebar-content">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-graduate fa-3x"></i>
+                    </div>
+                    <div class="user-info">
+                        <p class="user-name">
+                            <strong>{{ user.get_full_name|default:user.username }}</strong>
+                        </p>
+                        <p class="user-username">@{{ user.username }}</p>
+                        <p class="user-email">{{ user.email }}</p>
+                    </div>
+                    <div class="user-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">{{ user.post_set.count }}</span>
+                            <span class="stat-label">Notes</span>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <a href="{% url 'profile_edit' %}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-edit"></i> Edit Name
+                        </a>
+                    </div>
+                </div>
+            </aside>
+            {% endif %}
 
-        <div class="toast-container" id="toasts" aria-live="polite" aria-atomic="true">
-            {# Optional: JS-based toasts; can be wired later if you want #}
+            <!-- Main Content -->
+            <main class="main-content" id="page" tabindex="-1" role="main">
+                <!-- Django messages -->
+                {% if messages %}
+                <div class="messages" aria-live="polite">
+                    {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </main>
+
+            <!-- Footer -->
+            <footer class="site-footer">
+                <div class="footer-content">
+                    <div class="footer-brand">
+                        <span>&copy; {% now "Y" %} MathsIsIt Notes</span>
+                    </div>
+                    
+                    <div class="footer-links">
+                        <a href="{% url 'home' %}">Home</a>
+                        <a href="{% url 'post_list' %}">All Notes</a>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}">Dashboard</a>
+                        {% else %}
+                        <a href="{% url 'register' %}">Register</a>
+                        <a href="{% url 'login' %}">Login</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="footer-social">
+                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </footer>
+
         </div>
+    </body>
 
-    </div>
+    <script>
+        // Initialize KaTeX auto-render when DOM is ready
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$", right: "$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "\\(", right: "\\)", display: false}
+                ],
+                throwOnError: false,
+                errorColor: "#cc0000"
+            });
+        });
 
-    <script src="{% static 'main/static/js/script.js' %}"></script>
-</body>
+        // Initialize MathLive when DOM is ready
+        document.addEventListener("DOMContentLoaded", function() {
+            // Wait for MathLive to be ready
+            if (window.mathlive) {
+                const mathFields = document.querySelectorAll('.math-input');
+                mathFields.forEach(function(element) {
+                    const mf = window.mathlive.MathField(element, {
+                        virtualKeyboardMode: 'manual',
+                        smartFence: true,
+                        smartMode: true
+                    });
+                    // Store reference for form submission
+                    element.dataset.mathfield = 'true';
+                });
+            }
+        });
+
+        // Handle form submission - convert MathLive content to LaTeX
+        document.addEventListener('submit', function(e) {
+            const mathFields = document.querySelectorAll('.math-input');
+            mathFields.forEach(function(element) {
+                if (element.dataset.mathfield === 'true' && element.mathfield) {
+                    // Convert MathLive content to LaTeX
+                    const latex = element.mathfield.$latex();
+                    // Create a hidden input with the LaTeX value
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = element.name + '_latex';
+                    hiddenInput.value = latex;
+                    element.form.appendChild(hiddenInput);
+                }
+            });
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
 
 </html>
