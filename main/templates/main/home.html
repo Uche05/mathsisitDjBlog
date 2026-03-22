@@ -1,42 +1,179 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Home · Maths Notes{% endblock %}
+{% block title %}Home &middot; MathsIsIt Notes{% endblock %}
 
 {% block content %}
-<section aria-labelledby="homeTitle">
-    <div class="hero" role="region" aria-label="Welcome">
-        <div>
-            <h1 id="homeTitle">Welcome to Maths Notes</h1>
-            <p>Short, clear maths explanations — intuition first. Browse the latest posts below.</p>
-            <div class="small" style="margin-top:8px">
-                Recognition over recall: scan titles and snippets, then dive into a post.
+<!-- Hero Section -->
+<section class="hero" aria-labelledby="heroTitle">
+    <h1 id="heroTitle">Master Mathematics with Clarity</h1>
+    <p>Clear explanations, intuitive proofs, and step-by-step reasoning. Build deep understanding rather than memorizing formulas.</p>
+    <div class="hero-cta">
+        <a href="{% url 'post_list' %}" class="cta-button primary">
+            <i class="fas fa-book-open"></i> Browse All Notes
+        </a>
+        {% if not user.is_authenticated %}
+        <a href="{% url 'register' %}" class="cta-button secondary">
+            <i class="fas fa-user-plus"></i> Get Started Free
+        </a>
+        {% endif %}
+    </div>
+    
+    <!-- Hero Image -->
+    <div class="hero-image">
+        <img src="{% static 'main/images/mathyngtch1.jpg' %}" alt="Mathematics learning" loading="lazy">
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features" aria-labelledby="featuresTitle">
+    <h2 id="featuresTitle" class="visually-hidden" style="position: absolute; width: 1px; height: 1px; overflow: hidden; margin: -1px;">Why MathsIsIt Notes</h2>
+    
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-lightbulb"></i>
+        </div>
+        <h3>Intuition First</h3>
+        <p>Every concept starts with the "why" before the "how". Build genuine understanding that lasts.</p>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-pencil-alt"></i>
+        </div>
+        <h3>Step-by-Step Proofs</h3>
+        <p>Detailed derivations that show each logical step, not just the final answer.</p>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-search"></i>
+        </div>
+        <h3>Easy Navigation</h3>
+        <p>Quickly find what you need with organized categories and searchable notes.</p>
+    </div>
+</section>
+
+<!-- Q&A Section - Collapsible -->
+<section aria-labelledby="qaTitle">
+    <div class="section-header">
+        <h2 id="qaTitle">Frequently Asked Questions</h2>
+    </div>
+    
+    <div class="accordion">
+        <div class="accordion-item">
+            <button class="accordion-header" onclick="this.classList.toggle('active'); this.nextElementSibling.classList.toggle('open');">
+                <span>What is MathsIsIt Notes?</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="accordion-content">
+                <div class="accordion-body">
+                    <p>MathsIsIt Notes is a platform for sharing clear, intuitive mathematics explanations. We believe that understanding the "why" behind mathematical concepts is just as important as knowing the "how". Our notes are designed to build deep intuition and lasting comprehension.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="accordion-item">
+            <button class="accordion-header" onclick="this.classList.toggle('active'); this.nextElementSibling.classList.toggle('open');">
+                <span>How do I contribute notes?</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="accordion-content">
+                <div class="accordion-body">
+                    <p>Simply create a free account and click "New Note" from your dashboard. You can write about any mathematical topic you're passionate about. Our community values clear explanations and intuitive approaches.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="accordion-item">
+            <button class="accordion-header" onclick="this.classList.toggle('active'); this.nextElementSibling.classList.toggle('open');">
+                <span>What topics can I find here?</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="accordion-content">
+                <div class="accordion-body">
+                    <p>We cover a wide range of mathematical topics including algebra, calculus, geometry, number theory, statistics, and more. Our contributors bring expertise from various mathematical backgrounds.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="accordion-item">
+            <button class="accordion-header" onclick="this.classList.toggle('active'); this.nextElementSibling.classList.toggle('open');">
+                <span>Is it free to use?</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="accordion-content">
+                <div class="accordion-body">
+                    <p>Yes! MathsIsIt Notes is completely free to use. You can browse all notes, create an account, and contribute your own explanations at no cost. We believe knowledge should be accessible to everyone.</p>
+                </div>
             </div>
         </div>
     </div>
+</section>
 
-    <h3 class="small" style="margin-top:6px">Latest posts</h3>
-    <div class="posts" aria-live="polite">
+<!-- Latest Posts Section -->
+<section aria-labelledby="latestTitle">
+    <div class="section-header">
+        <h2 id="latestTitle">Latest Notes</h2>
+        <a href="{% url 'post_list' %}" class="btn btn-ghost">
+            View All <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+    
+    <div class="posts-grid" aria-live="polite">
         {% for post in latest_posts %}
         <article class="post-card">
-            <div>
-                <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
-                    <h2 style="margin:0;font-size:18px">
-                        <a href="{% url 'post_detail' post.slug %}" style="color:inherit;text-decoration:none;">
-                            {{ post.title }}
-                        </a>
-                    </h2>
-                    <div class="post-meta small">
-                        {{ post.author.username }} · {{ post.created_at|date:"M j, Y" }}
-                    </div>
+            <div class="post-card-header">
+                <h2>
+                    <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a>
+                </h2>
+                <div class="post-card-badges">
+                    <span class="difficulty-badge {{ post.difficulty }}">
+                        <i class="fas fa-signal"></i> {{ post.get_difficulty_display }}
+                    </span>
+                    {% if post.category %}
+                    <span class="category-tag">
+                        <i class="fas fa-folder"></i> {{ post.category.name }}
+                    </span>
+                    {% endif %}
                 </div>
-                <div class="snippet">
-                    {{ post.content|truncatechars:140 }}
-                </div>
+            </div>
+            <div class="post-meta">
+                <span class="post-meta-item"><i class="fas fa-user"></i> {{ post.author.username }}</span>
+                <span class="post-meta-item"><i class="fas fa-calendar"></i> {{ post.created_at|date:"M j, Y" }}</span>
+            </div>
+            <div class="snippet">
+                {{ post.content|truncatechars:150 }}
             </div>
         </article>
         {% empty %}
-        <p class="muted small">No posts yet. Be the first to create one!</p>
+        <div class="text-center text-muted" style="grid-column: 1/-1; padding: 40px;">
+            <p>No notes yet. Be the first to create one!</p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'post_create' %}" class="btn btn-primary mt-2">
+                <i class="fas fa-plus"></i> Create First Note
+            </a>
+            {% else %}
+            <a href="{% url 'register' %}" class="btn btn-primary mt-2">
+                <i class="fas fa-user-plus"></i> Register to Contribute
+            </a>
+            {% endif %}
+        </div>
         {% endfor %}
     </div>
 </section>
+
+<!-- CTA Section -->
+{% if not user.is_authenticated %}
+<section style="text-align: center; padding: 48px 24px; margin-top: 48px; background: var(--bg-surface); border-radius: var(--radius-lg);">
+    <h2 style="font-size: 24px; margin-bottom: 12px;">Ready to Contribute?</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 24px; max-width: 500px; margin-left: auto; margin-right: auto;">
+        Join our community of learners and educators. Share your mathematical insights and help others understand.
+    </p>
+    <a href="{% url 'register' %}" class="cta-button primary">
+        <i class="fas fa-user-plus"></i> Create Free Account
+    </a>
+</section>
+{% endif %}
+
 {% endblock %}
