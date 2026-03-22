@@ -2,12 +2,12 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
-from django.core.paginator import Paginator
 
 from .forms import LoginForm, PostForm, RegisterForm
-from .models import Post
+from .models import Comment, Post
 
 
 def home(request):
@@ -33,6 +33,22 @@ def post_list(request):
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, status="published")
+    
+    # Handle comment submission
+    if request.method == "POST" and request.user.is_authenticated:
+        content = request.POST.get("content", "").strip()
+        if content:
+            Comment.objects.create(
+                post=post,
+                author=request.user,
+                content=content,
+                approved=True  # Auto-approve for now
+            )
+            messages.success(request, "Comment added successfully!")
+            return redirect("post_detail", slug=slug)
+        else:
+            messages.error(request, "Comment cannot be empty.")
+    
     return render(request, "main/post_detail.html", {"post": post})
 
 
@@ -150,3 +166,20 @@ def logout_view(request):
     logout(request)
     messages.success(request, "You have been logged out.")
     return redirect("home")
+
+
+@login_required
+def profile_edit(request):
+    """Allow users to edit their profile (first name, last name)"""
+    if request.method == "POST":
+        first_name = request.POST.get("first_name", "").strip()
+        last_name = request.POST.get("last_name", "").strip()
+        
+        request.user.first_name = first_name
+        request.user.last_name = last_name
+        request.user.save()
+        
+        messages.success(request, "Your profile has been updated successfully!")
+        return redirect("dashboard")
+    
+    return render(request, "main/profile_edit.html", {"user": request.user})
