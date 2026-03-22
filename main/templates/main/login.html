@@ -1,40 +1,44 @@
 {% extends 'base.html' %}
-{% block title %}Login · Maths Notes{% endblock %}
+{% block title %}Login &middot; MathsIsIt Notes{% endblock %}
 
 {% block content %}
 <section aria-labelledby="loginTitle">
-    <h1 id="loginTitle">Login</h1>
-    <p class="inline-note small">
-        Enter your username or email and password. If anything is wrong, we’ll show you what to fix.
-    </p>
-
-    <form method="post" novalidate>
-        {% csrf_token %}
-
-        {% if form.non_field_errors %}
-        <div class="error">{{ form.non_field_errors }}</div>
-        {% endif %}
-
-        {% for field in form %}
-        <div>
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}
-            {% if field.errors %}
-            <div class="error">
-                {{ field.errors|striptags }}
-            </div>
-            {% endif %}
-        </div>
-        {% endfor %}
-
-        <div class="flex" style="margin-top:8px">
-            <button class="btn full" type="submit">Login</button>
-        </div>
-
-        <p class="small" style="margin-top:10px;">
-            Need an account?
-            <a href="{% url 'register' %}">Register here</a>.
+    <div class="form-container">
+        <h1 id="loginTitle">Login</h1>
+        <p class="subtitle">
+            Enter your username or email and password to access your account.
         </p>
-    </form>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="form-error">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div class="form-error">
+                    {{ field.errors|striptags }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button class="btn btn-primary btn-full" type="submit">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </div>
+
+            <p class="text-center text-muted mt-2">
+                Don't have an account?
+                <a href="{% url 'register' %}">Register here</a>.
+            </p>
+        </form>
+    </div>
 </section>
 {% endblock %}
