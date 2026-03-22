@@ -1,41 +1,276 @@
 {% extends 'base.html' %}
-{% block title %}{{ form_title }} · Maths Notes{% endblock %}
+{% block title %}{{ form_title }} &middot; MathsIsIt Notes{% endblock %}
+
+{% block extra_css %}
+<style>
+    .math-field-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    .math-toolbar {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-bottom: none;
+        border-radius: 8px 8px 0 0;
+        flex-wrap: wrap;
+    }
+    
+    .math-toolbar-btn {
+        background: white;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .math-toolbar-btn:hover {
+        background: #e9ecef;
+        border-color: #adb5bd;
+    }
+    
+    .math-toolbar-btn.active {
+        background: #e7f5ff;
+        border-color: #4a90d9;
+        color: #1971c2;
+    }
+    
+    #math-field {
+        width: 100%;
+        min-height: 250px;
+        padding: 15px;
+        font-size: 18px;
+        border: 2px solid #e0e0e0;
+        border-radius: 0 0 8px 8px;
+        font-family: 'KaTeX_Main', 'Times New Roman', serif;
+    }
+    
+    #math-field:focus {
+        border-color: #4a90d9;
+        outline: none;
+    }
+    
+    .math-editor-help {
+        background: #f8f9fa;
+        border-left: 4px solid #4a90d9;
+        padding: 15px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+    
+    .math-editor-help h4 {
+        margin-top: 0;
+        color: #333;
+    }
+    
+    .math-editor-help code {
+        background: #e9ecef;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+    }
+    
+    .math-editor-help ul {
+        margin-bottom: 0;
+        padding-left: 20px;
+    }
+    
+    .math-editor-help li {
+        margin-bottom: 5px;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <section aria-labelledby="formTitle">
-    <h1 id="formTitle">{{ form_title }}</h1>
-    <p class="inline-note small">
-        Title and content are required.
-    </p>
+    <div class="form-container">
+        <h1 id="formTitle">{{ form_title }}</h1>
+        <p class="subtitle">
+            Title is required. Use the math editor below to write equations.
+        </p>
 
-    <form method="post" novalidate>
-        {% csrf_token %}
-
-        {% if form.non_field_errors %}
-        <div class="error">
-            {{ form.non_field_errors }}
+        <div class="math-editor-help">
+            <h4><i class="fas fa-square-root-alt"></i> How to Write Math</h4>
+            <p>Use the toolbar buttons above the editor to insert math symbols, or type LaTeX directly:</p>
+            <ul>
+                <li><strong>Toolbar buttons</strong> - Click to insert fractions, integrals, sigma, roots, etc.</li>
+                <li><strong>LaTeX codes</strong> - Type directly like <code>\int</code>, <code>\frac{a}{b}</code>, <code>\sum</code>, <code>x^2</code>, <code>\sqrt{x}</code></li>
+            </ul>
         </div>
-        {% endif %}
 
-        {% for field in form %}
-        <div>
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}
-            {% if field.help_text %}
-            <div class="inline-note small">{{ field.help_text }}</div>
-            {% endif %}
-            {% if field.errors %}
-            <div class="error">
-                {{ field.errors|striptags }}
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="form-error">
+                {{ form.non_field_errors }}
             </div>
             {% endif %}
-        </div>
-        {% endfor %}
 
-        <div class="flex" style="margin-top:8px">
-            <button class="btn" type="submit">Save</button>
-            <a class="btn ghost" href="{% url 'dashboard' %}">Cancel</a>
-        </div>
-    </form>
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                
+                {% if field.name == 'content' %}
+                <div class="math-field-container">
+                    <div class="math-toolbar">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\frac{a}{b}')" title="Fraction">
+                            <span>a/b</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\sqrt{x}')" title="Square Root">
+                            <span>√</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\sqrt[n]{x}')" title="nth Root">
+                            <span>ⁿ√</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('^2')" title="Superscript">
+                            <span>x²</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('_{n}')" title="Subscript">
+                            <span>xₙ</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\int')" title="Integral">
+                            <span>∫</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\int_{a}^{b}')" title="Definite Integral">
+                            <span>∫ₐᵇ</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\sum')" title="Sigma">
+                            <span>Σ</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\sum_{i=1}^{n}')" title="Sum">
+                            <span>Σᵢ</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\prod')" title="Product">
+                            <span>Π</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\lim_{x \\\\to \\\\infty}')" title="Limit">
+                            <span>lim</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\frac{d}{dx}')" title="Derivative">
+                            <span>d/dx</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\partial')" title="Partial Derivative">
+                            <span>∂</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\infty')" title="Infinity">
+                            <span>∞</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\pi')" title="Pi">
+                            <span>π</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\theta')" title="Theta">
+                            <span>θ</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\alpha')" title="Alpha">
+                            <span>α</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\beta')" title="Beta">
+                            <span>β</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\gamma')" title="Gamma">
+                            <span>γ</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\sin')" title="Sine">
+                            <span>sin</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\cos')" title="Cosine">
+                            <span>cos</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\tan')" title="Tangent">
+                            <span>tan</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\log')" title="Log">
+                            <span>log</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\ln')" title="Natural Log">
+                            <span>ln</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\left(\\\\right)')" title="Parentheses">
+                            <span>( )</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\left[\\\\right]')" title="Brackets">
+                            <span>[ ]</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\cdot')" title="Dot">
+                            <span>·</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\times')" title="Times">
+                            <span>×</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\div')" title="Divide">
+                            <span>÷</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\neq')" title="Not Equal">
+                            <span>≠</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\leq')" title="Less Than or Equal">
+                            <span>≤</span>
+                        </button>
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\geq')" title="Greater Than or Equal">
+                            <span>≥</span>
+                        </button>
+                    </div>
+                    <textarea 
+                        id="math-field" 
+                        name="{{ field.name }}" 
+                        placeholder="Write your maths explanation here...&#10;&#10;Examples:&#10;- Integral: \int_0^1 x^2 dx&#10;- Fraction: \frac{a}{b}&#10;- Sum: \sum_{i=1}^{n} i"
+                        data-form-field
+                    >{% if field.value %}{{ field.value }}{% endif %}</textarea>
+                </div>
+                {% else %}
+                {{ field }}
+                {% endif %}
+                
+                {% if field.help_text %}
+                <div class="form-help">{{ field.help_text }}</div>
+                {% endif %}
+                {% if field.errors %}
+                <div class="form-error">
+                    {{ field.errors|striptags }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Insert LaTeX at cursor position in textarea
+    function insertLatex(latex) {
+        const textarea = document.getElementById('math-field');
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+        
+        // Insert the LaTeX at cursor position
+        textarea.value = text.substring(0, start) + latex + text.substring(end);
+        
+        // Move cursor after inserted text
+        textarea.selectionStart = textarea.selectionEnd = start + latex.length;
+        
+        // Focus the textarea
+        textarea.focus();
+    }
+</script>
 {% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile &middot; MathsIsIt Notes{% endblock %}
+
+{% block content %}
+<section aria-labelledby="formTitle">
+    <div class="form-container">
+        <h1 id="formTitle">Edit Your Profile</h1>
+        <p class="subtitle">
+            Update your display name. This name will be shown on your posts.
+        </p>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" id="id_username" value="{{ user.username }}" class="form-input" disabled>
+                <div class="form-help">Username cannot be changed.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                <input type="email" id="id_email" value="{{ user.email }}" class="form-input" disabled>
+                <div class="form-help">Contact admin to change email.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_first_name">First Name</label>
+                <input type="text" name="first_name" id="id_first_name" value="{{ user.first_name }}" class="form-input" placeholder="Enter your first name">
+            </div>
+
+            <div class="form-group">
+                <label for="id_last_name">Last Name</label>
+                <input type="text" name="last_name" id="id_last_name" value="{{ user.last_name }}" class="form-input" placeholder="Enter your last name">
+            </div>
+
+            <div class="form-preview">
+                <h4>Preview</h4>
+                <p>Your name will display as: <strong>{{ user.get_full_name|default:user.username }}</strong></p>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
