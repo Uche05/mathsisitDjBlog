@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
-{% block title %}Page not found · Maths Notes{% endblock %}
+{% block title %}404 - Page Not Found &middot; MathsIsIt Notes{% endblock %}
 
 {% block content %}
 <div class="error-page" role="alert" aria-labelledby="err404">
-    <div class="big">404</div>
-    <div>
-        <h2 id="err404">Page not found</h2>
-        <p class="muted small">
-            The page you’re looking for doesn’t exist. Try going back home or checking the URL.
-        </p>
-        <div style="margin-top:12px">
-            <a class="btn" href="{% url 'home' %}">Go home</a>
-        </div>
+    <div class="error-code">404</div>
+    <h1 id="err404">Page Not Found</h1>
+    <p class="text-secondary">
+        The page you're looking for doesn't exist. Try going back home or checking the URL.
+    </p>
+    <div style="margin-top: 24px;">
+        <a class="btn btn-primary" href="{% url 'home' %}">
+            <i class="fas fa-home"></i> Go Home
+        </a>
     </div>
 </div>
 {% endblock %}
