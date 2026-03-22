@@ -1,8 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import Post
+from .models import Category, Post
 
 
 class RegisterForm(UserCreationForm):
@@ -31,12 +31,21 @@ class LoginForm(AuthenticationForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ("title", "content", "status")
+        fields = ("title", "category", "difficulty", "content", "status")
 
         widgets = {
             "title": forms.TextInput(attrs={"placeholder": "e.g. Introduction to Quadratics"}),
             "content": forms.Textarea(attrs={"placeholder": "Write your maths explanation here..."}),
+            "category": forms.Select(attrs={"class": "form-select"}),
+            "difficulty": forms.Select(attrs={"class": "form-select"}),
+            "status": forms.Select(attrs={"class": "form-select"}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make category optional in the form
+        self.fields["category"].required = False
+        self.fields["category"].empty_label = "Select a category (optional)"
 
     def clean_content(self):
         content = (self.cleaned_data.get("content") or "").strip()
