@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from .models import Post
 
+
 class TestPostModel(TestCase):
     def test_slug_is_generated_on_save(self):
         user = User.objects.create_user("user", "u@test.com", "pass")

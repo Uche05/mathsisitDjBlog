@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 from .models import Post
 
+
 class TestDashboard(TestCase):
     def setUp(self):
         self.user = User.objects.create_user("user", "u@test.com", "pass")

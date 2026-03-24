@@ -29,22 +29,31 @@ class TestPostCRUDViews(TestCase):
     def test_create_post_success(self):
         self.client.login(username="author", password="pass12345")
 
-        resp = self.client.post(reverse("post_create"), {
-            "title": "New post",
-            "content": "y" * 60,
-            "status": "draft",
-        })
+        resp = self.client.post(
+            reverse("post_create"),
+            {
+                "title": "New post",
+                "content": "y" * 60,
+                "status": "draft",
+                "difficulty": "beginner",
+            },
+        )
 
-        self.assertEqual(Post.objects.filter(title="New post", author=self.author).count(), 1)
+        self.assertEqual(
+            Post.objects.filter(title="New post", author=self.author).count(), 1
+        )
 
     def test_create_post_invalid_content_rejected(self):
         self.client.login(username="author", password="pass12345")
 
-        resp = self.client.post(reverse("post_create"), {
-            "title": "Bad post",
-            "content": "too short",
-            "status": "draft",
-        })
+        resp = self.client.post(
+            reverse("post_create"),
+            {
+                "title": "Bad post",
+                "content": "too short",
+                "status": "draft",
+            },
+        )
 
         self.assertEqual(Post.objects.filter(title="Bad post").count(), 0)
 
@@ -53,16 +62,19 @@ class TestPostCRUDViews(TestCase):
         resp = self.client.get(reverse("post_list"))
         self.assertEqual(resp.status_code, 200)
 
-    
     # update functionality test
     def test_author_can_edit_post(self):
         self.client.login(username="author", password="pass12345")
 
-        resp = self.client.post(reverse("post_edit", args=[self.post.slug]), {
-            "title": "Updated title",
-            "content": "z" * 60,
-            "status": "draft",
-        })
+        resp = self.client.post(
+            reverse("post_edit", args=[self.post.slug]),
+            {
+                "title": "Updated title",
+                "content": "z" * 60,
+                "status": "draft",
+                "difficulty": "beginner",
+            },
+        )
 
         self.post.refresh_from_db()
         self.assertEqual(self.post.title, "Updated title")
@@ -82,14 +94,14 @@ class TestPostCRUDViews(TestCase):
 
         self.assertTrue(Post.objects.filter(pk=self.post.pk).exists())
 
-# read published posts
+    # read published posts
     def test_published_post_detail_is_200(self):
         self.post.status = "published"
         self.post.save()
         resp = self.client.get(reverse("post_detail", args=[self.post.slug]))
         self.assertEqual(resp.status_code, 200)
 
-#  read draft posts
+    #  read draft posts
     def test_draft_post_detail_is_404_for_anonymous(self):
         resp = self.client.get(reverse("post_detail", args=[self.post.slug]))
         self.assertEqual(resp.status_code, 404)
