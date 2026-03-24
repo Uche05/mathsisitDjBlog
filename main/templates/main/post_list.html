@@ -10,6 +10,14 @@
         Browse every mathematics note on the site. Click a title to view the full explanation.
     </p>
 
+    <form method="get" action="" class="search-bar" style="margin-bottom: 2rem; max-width: 400px;">
+        <label for="search-input" class="visually-hidden">Search notes</label>
+        <div style="display: flex; gap: 0.5rem;">
+            <input id="search-input" name="q" type="text" value="{{ request.GET.q|default:'' }}" placeholder="Search by keyword or topic..." class="form-control" style="flex: 1;" autocomplete="off">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+        </div>
+    </form>
+
     <div class="posts-grid">
         {# loop over the paginated page object #}
         {% for post in page_obj %}
