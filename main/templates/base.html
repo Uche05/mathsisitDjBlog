@@ -7,9 +7,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}MathsIsIt Notes{% endblock %}</title>
         <meta name="description" content="MathsIsIt Notes - Clear reasoning, quick proofs, intuition-first mathematics explanations">
-        <link rel="stylesheet" href="{% static 'main/css/base.css' %}">
+        <link rel="stylesheet" href="{% static "main/css/base.css" %}">
         {% block extra_css %}{% endblock %}
-        <link rel="shortcut icon" href="{% static 'main/images/favicon.svg' %}" type="image/x-icon">
+        <link rel="shortcut icon" href="{% static "main/images/favicon.svg" %}" type="image/x-icon">
         <!-- FontAwesome for icons -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
         <!-- KaTeX for math rendering -->
@@ -27,7 +27,7 @@
             <!-- Header -->
             <header class="site-header">
                 <div class="header-content">
-                    <a href="{% url 'home' %}" class="header-brand">
+                    <a href="{% url "home" %}" class="header-brand">
                         <div class="logo" aria-hidden="true">MI</div>
                         <div>
                             <div class="site-title">MathsIsIt Notes</div>
@@ -35,33 +35,33 @@
                         </div>
                     </a>
 
-                    <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.main-nav').classList.toggle('active')">
+                    <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector(".main-nav").classList.toggle("active")">
                         <i class="fas fa-bars"></i>
                     </button>
 
                     <nav class="main-nav" aria-label="Main navigation">
-                        <a href="{% url 'home' %}">
+                        <a href="{% url "home" %}">
                             <i class="fas fa-home"></i> Home
                         </a>
-                        <a href="{% url 'post_list' %}">
+                        <a href="{% url "post_list" %}">
                             <i class="fas fa-book"></i> All Notes
                         </a>
 
                         {% if user.is_authenticated %}
-                        <a href="{% url 'dashboard' %}">
+                        <a href="{% url "dashboard" %}">
                             <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
-                        <a href="{% url 'post_create' %}" class="btn-primary">
+                        <a href="{% url "post_create" %}" class="btn-primary">
                             <i class="fas fa-plus"></i> New Note
                         </a>
-                        <a href="{% url 'logout' %}">
+                        <a href="{% url "logout" %}">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </a>
                         {% else %}
-                        <a href="{% url 'register' %}">
+                        <a href="{% url "register" %}">
                             <i class="fas fa-user-plus"></i> Register
                         </a>
-                        <a href="{% url 'login' %}">
+                        <a href="{% url "login" %}">
                             <i class="fas fa-sign-in-alt"></i> Login
                         </a>
                         {% endif %}
@@ -71,7 +71,7 @@
 
             <!-- User Sidebar Toggle Button -->
             {% if user.is_authenticated %}
-            <button class="user-sidebar-toggle" aria-label="Toggle user panel" onclick="document.querySelector('.user-sidebar').classList.toggle('active')">
+            <button class="user-sidebar-toggle" aria-label="Toggle user panel" onclick="document.querySelector(".user-sidebar").classList.toggle("active")">
                 <i class="fas fa-user-circle"></i>
             </button>
             {% endif %}
@@ -81,7 +81,7 @@
             <aside class="user-sidebar" aria-label="User profile">
                 <div class="user-sidebar-header">
                     <h3><i class="fas fa-user-circle"></i> Your Profile</h3>
-                    <button class="sidebar-close" onclick="document.querySelector('.user-sidebar').classList.remove('active')" aria-label="Close sidebar">
+                    <button class="sidebar-close" onclick="document.querySelector(".user-sidebar").classList.remove("active")" aria-label="Close sidebar">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -103,7 +103,7 @@
                         </div>
                     </div>
                     <div class="user-actions">
-                        <a href="{% url 'profile_edit' %}" class="btn btn-sm btn-primary">
+                        <a href="{% url "profile_edit" %}" class="btn btn-sm btn-primary">
                             <i class="fas fa-edit"></i> Edit Name
                         </a>
                     </div>
@@ -133,15 +133,15 @@
                     </div>
                     
                     < class="footer-links">
-                        <a href="{% url 'home' %}">Home</a>
-                        <a href="{% url 'post_list' %}">All Notes</a>
+                        <a href="{% url "home" %}">Home</a>
+                        <a href="{% url "post_list" %}">All Notes</a>
                         {% if user.is_authenticated %}
-                        <a href="{% url 'dashboard' %}">Dashboard</a>
+                        <a href="{% url "dashboard" %}">Dashboard</a>
                         {% else %}
-                        <a href="{% url 'register' %}">Register</a>
-                        <a href="{% url 'login' %}">Login</a>
+                        <a href="{% url "register" %}">Register</a>
+                        <a href="{% url "login" %}">Login</a>
                         {% endif %}
-                        <a href="{% url 'contact' %}">Contact</a>
+                        <a href="{% url "contact" %}">Contact</a>
                     </div>
 
                     <div class="footer-social">
@@ -150,7 +150,7 @@
                          <a href="#" aria-label="Email"><i class="fas fa-envelope"></i></a>
                      </div>
                      <div class="footer-contact">
-                         <a href="{% url 'contact' %}" aria-label="Contact Us"><i class="fas fa-headset"></i> Contact Us</a>
+                         <a href="{% url "contact" %}" aria-label="Contact Us"><i class="fas fa-headset"></i> Contact Us</a>
                      </div>
                 </div>
             </footer>
@@ -177,30 +177,30 @@
         document.addEventListener("DOMContentLoaded", function() {
             // Wait for MathLive to be ready
             if (window.mathlive) {
-                const mathFields = document.querySelectorAll('.math-input');
+                const mathFields = document.querySelectorAll(".math-input");
                 mathFields.forEach(function(element) {
                     const mf = window.mathlive.MathField(element, {
-                        virtualKeyboardMode: 'manual',
+                        virtualKeyboardMode: "manual",
                         smartFence: true,
                         smartMode: true
                     });
                     // Store reference for form submission
-                    element.dataset.mathfield = 'true';
+                    element.dataset.mathfield = "true";
                 });
             }
         });
 
         // Handle form submission - convert MathLive content to LaTeX
-        document.addEventListener('submit', function(e) {
-            const mathFields = document.querySelectorAll('.math-input');
+        document.addEventListener("submit", function(e) {
+            const mathFields = document.querySelectorAll(".math-input");
             mathFields.forEach(function(element) {
-                if (element.dataset.mathfield === 'true' && element.mathfield) {
+                if (element.dataset.mathfield === "true" && element.mathfield) {
                     // Convert MathLive content to LaTeX
                     const latex = element.mathfield.$latex();
                     // Create a hidden input with the LaTeX value
-                    const hiddenInput = document.createElement('input');
-                    hiddenInput.type = 'hidden';
-                    hiddenInput.name = element.name + '_latex';
+                    const hiddenInput = document.createElement("input");
+                    hiddenInput.type = "hidden";
+                    hiddenInput.name = element.name + "_latex";
                     hiddenInput.value = latex;
                     element.form.appendChild(hiddenInput);
                 }

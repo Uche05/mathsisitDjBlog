@@ -7,8 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{% block title %}MathsIsIt Notes{% endblock %}</title>
         <meta name="description" content="MathsIsIt Notes - Clear reasoning, quick proofs, intuition-first mathematics explanations">
-        <link rel="stylesheet" href="{% static 'main/css/base.css' %}">
-        <link rel="shortcut icon" href="{% static 'main/images/favicon.svg' %}" type="image/x-icon">
+        <link rel="stylesheet" href="{% static "main/css/base.css" %}">
+        <link rel="shortcut icon" href="{% static "main/images/favicon.svg" %}" type="image/x-icon">
         <!-- FontAwesome for icons -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
@@ -19,7 +19,7 @@
             <!-- Header -->
             <header class="site-header">
                 <div class="header-content">
-                    <a href="{% url 'home' %}" class="header-brand">
+                    <a href="{% url "home" %}" class="header-brand">
                         <div class="logo" aria-hidden="true">MI</div>
                         <div>
                             <div class="site-title">MathsIsIt Notes</div>
@@ -27,33 +27,33 @@
                         </div>
                     </a>
 
-                    <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.main-nav').classList.toggle('active')">
+                    <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector(".main-nav").classList.toggle("active")">
                         <i class="fas fa-bars"></i>
                     </button>
 
                     <nav class="main-nav" aria-label="Main navigation">
-                        <a href="{% url 'home' %}">
+                        <a href="{% url "home" %}">
                             <i class="fas fa-home"></i> Home
                         </a>
-                        <a href="{% url 'post_list' %}">
+                        <a href="{% url "post_list" %}">
                             <i class="fas fa-book"></i> All Notes
                         </a>
 
                         {% if user.is_authenticated %}
-                        <a href="{% url 'dashboard' %}">
+                        <a href="{% url "dashboard" %}">
                             <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
-                        <a href="{% url 'post_create' %}" class="btn-primary">
+                        <a href="{% url "post_create" %}" class="btn-primary">
                             <i class="fas fa-plus"></i> New Note
                         </a>
-                        <a href="{% url 'logout' %}">
+                        <a href="{% url "logout" %}">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </a>
                         {% else %}
-                        <a href="{% url 'register' %}">
+                        <a href="{% url "register" %}">
                             <i class="fas fa-user-plus"></i> Register
                         </a>
-                        <a href="{% url 'login' %}">
+                        <a href="{% url "login" %}">
                             <i class="fas fa-sign-in-alt"></i> Login
                         </a>
                         {% endif %}
@@ -83,13 +83,13 @@
                     </div>
                     
                     <div class="footer-links">
-                        <a href="{% url 'home' %}">Home</a>
-                        <a href="{% url 'post_list' %}">All Notes</a>
+                        <a href="{% url "home" %}">Home</a>
+                        <a href="{% url "post_list" %}">All Notes</a>
                         {% if user.is_authenticated %}
-                        <a href="{% url 'dashboard' %}">Dashboard</a>
+                        <a href="{% url "dashboard" %}">Dashboard</a>
                         {% else %}
-                        <a href="{% url 'register' %}">Register</a>
-                        <a href="{% url 'login' %}">Login</a>
+                        <a href="{% url "register" %}">Register</a>
+                        <a href="{% url "login" %}">Login</a>
                         {% endif %}
                     </div>
 

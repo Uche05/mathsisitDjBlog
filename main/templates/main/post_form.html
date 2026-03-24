@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block title %}{{ form_title }} &middot; MathsIsIt Notes{% endblock %}
 
 {% block extra_css %}
@@ -50,7 +50,7 @@
         font-size: 18px;
         border: 2px solid #e0e0e0;
         border-radius: 0 0 8px 8px;
-        font-family: 'KaTeX_Main', 'Times New Roman', serif;
+        font-family: "KaTeX_Main", "Times New Roman", serif;
     }
     
     #math-field:focus {
@@ -119,103 +119,103 @@
             <div class="form-group">
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                 
-                {% if field.name == 'content' %}
+                {% if field.name == "content" %}
                 <div class="math-field-container">
                     <div class="math-toolbar">
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\frac{a}{b}')" title="Fraction">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\frac{a}{b}")" title="Fraction">
                             <span>a/b</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\sqrt{x}')" title="Square Root">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\sqrt{x}")" title="Square Root">
                             <span>√</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\sqrt[n]{x}')" title="nth Root">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\sqrt[n]{x}")" title="nth Root">
                             <span>ⁿ√</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('^2')" title="Superscript">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("^2")" title="Superscript">
                             <span>x²</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('_{n}')" title="Subscript">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("_{n}")" title="Subscript">
                             <span>xₙ</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\int')" title="Integral">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\int")" title="Integral">
                             <span>∫</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\int_{a}^{b}')" title="Definite Integral">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\int_{a}^{b}")" title="Definite Integral">
                             <span>∫ₐᵇ</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\sum')" title="Sigma">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\sum")" title="Sigma">
                             <span>Σ</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\sum_{i=1}^{n}')" title="Sum">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\sum_{i=1}^{n}")" title="Sum">
                             <span>Σᵢ</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\prod')" title="Product">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\prod")" title="Product">
                             <span>Π</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\lim_{x \\\\to \\\\infty}')" title="Limit">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\lim_{x \\\\to \\\\infty}")" title="Limit">
                             <span>lim</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\frac{d}{dx}')" title="Derivative">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\frac{d}{dx}")" title="Derivative">
                             <span>d/dx</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\partial')" title="Partial Derivative">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\partial")" title="Partial Derivative">
                             <span>∂</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\infty')" title="Infinity">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\infty")" title="Infinity">
                             <span>∞</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\pi')" title="Pi">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\pi")" title="Pi">
                             <span>π</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\theta')" title="Theta">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\theta")" title="Theta">
                             <span>θ</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\alpha')" title="Alpha">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\alpha")" title="Alpha">
                             <span>α</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\beta')" title="Beta">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\beta")" title="Beta">
                             <span>β</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\gamma')" title="Gamma">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\gamma")" title="Gamma">
                             <span>γ</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\sin')" title="Sine">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\sin")" title="Sine">
                             <span>sin</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\cos')" title="Cosine">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\cos")" title="Cosine">
                             <span>cos</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\tan')" title="Tangent">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\tan")" title="Tangent">
                             <span>tan</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\log')" title="Log">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\log")" title="Log">
                             <span>log</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\ln')" title="Natural Log">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\ln")" title="Natural Log">
                             <span>ln</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\left(\\\\right)')" title="Parentheses">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\left(\\\\right)")" title="Parentheses">
                             <span>( )</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\left[\\\\right]')" title="Brackets">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\left[\\\\right]")" title="Brackets">
                             <span>[ ]</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\cdot')" title="Dot">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\cdot")" title="Dot">
                             <span>·</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\times')" title="Times">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\times")" title="Times">
                             <span>×</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\div')" title="Divide">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\div")" title="Divide">
                             <span>÷</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\neq')" title="Not Equal">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\neq")" title="Not Equal">
                             <span>≠</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\leq')" title="Less Than or Equal">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\leq")" title="Less Than or Equal">
                             <span>≤</span>
                         </button>
-                        <button type="button" class="math-toolbar-btn" onclick="insertLatex('\\\\geq')" title="Greater Than or Equal">
+                        <button type="button" class="math-toolbar-btn" onclick="insertLatex("\\\\geq")" title="Greater Than or Equal">
                             <span>≥</span>
                         </button>
                     </div>
@@ -245,7 +245,7 @@
                 <button class="btn btn-primary" type="submit">
                     <i class="fas fa-save"></i> Save
                 </button>
-                <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                <a href="{% url "dashboard" %}" class="btn btn-secondary">
                     Cancel
                 </a>
             </div>
@@ -258,7 +258,7 @@
 <script>
     // Insert LaTeX at cursor position in textarea
     function insertLatex(latex) {
-        const textarea = document.getElementById('math-field');
+        const textarea = document.getElementById("math-field");
         const start = textarea.selectionStart;
         const end = textarea.selectionEnd;
         const text = textarea.value;
