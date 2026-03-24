@@ -132,7 +132,7 @@
                         <span>&copy; {% now "Y" %} MathsIsIt Notes</span>
                     </div>
                     
-                    <div class="footer-links">
+                    < class="footer-links">
                         <a href="{% url 'home' %}">Home</a>
                         <a href="{% url 'post_list' %}">All Notes</a>
                         {% if user.is_authenticated %}
@@ -141,6 +141,7 @@
                         <a href="{% url 'register' %}">Register</a>
                         <a href="{% url 'login' %}">Login</a>
                         {% endif %}
+                        <a href="{% url 'contact' %}">Contact</a>
                     </div>
 
                     <div class="footer-social">
