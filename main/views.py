@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -16,24 +17,27 @@ def home(request):
 
 
 def post_list(request):
-    posts_qs = Post.objects.filter(status="published").order_by("-created_at")
+    query = request.GET.get("q", "").strip()
+    posts_qs = Post.objects.filter(status="published")
+    if query:
+        posts_qs = posts_qs.filter(
+            Q(title__icontains=query)
+            | Q(content__icontains=query)
+            | Q(category__name__icontains=query)
+        )
+    posts_qs = posts_qs.order_by("-created_at")
 
-    # the use of paginator: choose how many posts per page
-    paginator = Paginator(posts_qs, 6)  # ✅ change 6 to whatever feels right
-
-    # read page number from the URL querystring (?page=2)
+    paginator = Paginator(posts_qs, 6)
     page_number = request.GET.get("page")
-
-    # get the requested page (safe: handles invalid pages gracefully)
     page_obj = paginator.get_page(page_number)
-
-    # pass page_obj into template
-    return render(request, "main/post_list.html", {"page_obj": page_obj})
+    return render(
+        request, "main/post_list.html", {"page_obj": page_obj, "request": request}
+    )
 
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, status="published")
-    
+
     # Handle comment submission
     if request.method == "POST" and request.user.is_authenticated:
         content = request.POST.get("content", "").strip()
@@ -42,13 +46,13 @@ def post_detail(request, slug):
                 post=post,
                 author=request.user,
                 content=content,
-                approved=True  # Auto-approve for now
+                approved=True,  # Auto-approve for now
             )
             messages.success(request, "Comment added successfully!")
             return redirect("post_detail", slug=slug)
         else:
             messages.error(request, "Comment cannot be empty.")
-    
+
     return render(request, "main/post_detail.html", {"post": post})
 
 
@@ -61,6 +65,7 @@ def dashboard(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, "main/dashboard.html", {"page_obj": page_obj})
+
 
 @login_required
 def post_create(request):
@@ -174,12 +179,12 @@ def profile_edit(request):
     if request.method == "POST":
         first_name = request.POST.get("first_name", "").strip()
         last_name = request.POST.get("last_name", "").strip()
-        
+
         request.user.first_name = first_name
         request.user.last_name = last_name
         request.user.save()
-        
+
         messages.success(request, "Your profile has been updated successfully!")
         return redirect("dashboard")
-    
+
     return render(request, "main/profile_edit.html", {"user": request.user})

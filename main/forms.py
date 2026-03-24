@@ -34,8 +34,12 @@ class PostForm(forms.ModelForm):
         fields = ("title", "category", "difficulty", "content", "status")
 
         widgets = {
-            "title": forms.TextInput(attrs={"placeholder": "e.g. Introduction to Quadratics"}),
-            "content": forms.Textarea(attrs={"placeholder": "Write your maths explanation here..."}),
+            "title": forms.TextInput(
+                attrs={"placeholder": "e.g. Introduction to Quadratics"}
+            ),
+            "content": forms.Textarea(
+                attrs={"placeholder": "Write your maths explanation here..."}
+            ),
             "category": forms.Select(attrs={"class": "form-select"}),
             "difficulty": forms.Select(attrs={"class": "form-select"}),
             "status": forms.Select(attrs={"class": "form-select"}),
@@ -46,6 +50,10 @@ class PostForm(forms.ModelForm):
         # Make category optional in the form
         self.fields["category"].required = False
         self.fields["category"].empty_label = "Select a category (optional)"
+        # Make difficulty optional in the form and set initial to model's default
+        self.fields["difficulty"].required = False
+        self.fields["difficulty"].empty_label = "Select a difficulty (optional)"
+        self.fields["difficulty"].initial = self.instance.difficulty
 
     def clean_content(self):
         content = (self.cleaned_data.get("content") or "").strip()

@@ -8,6 +8,7 @@ class Profile(models.Model):
     Extends Django's User model without modifying it.
     No duplicate fields that already exist on User.
     """
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
 
     def __str__(self):
@@ -19,9 +20,12 @@ class Category(models.Model):
     Stores categories for mathematics posts.
     Examples: Algebra, Calculus, Geometry, etc.
     """
+
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True, max_length=120, blank=True)
-    description = models.TextField(blank=True, help_text="Optional description for the category")
+    description = models.TextField(
+        blank=True, help_text="Optional description for the category"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -136,3 +140,4 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author.username} on {self.post.title}"
+# future considerations- contact us models
