@@ -7,8 +7,8 @@ from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import LoginForm, PostForm, RegisterForm
-from .models import Comment, Post
+from .forms import ContactForm, LoginForm, PostForm, RegisterForm
+from .models import Comment, Contact, Post
 
 
 def home(request):
@@ -188,3 +188,19 @@ def profile_edit(request):
         return redirect("dashboard")
 
     return render(request, "main/profile_edit.html", {"user": request.user})
+
+
+def contact_view(request):
+    """Handle contact form submissions"""
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your message has been sent successfully!")
+            return redirect("home")
+        else:
+            messages.error(request, "Please fix the errors below.")
+    else:
+        form = ContactForm()
+    
+    return render(request, "main/contact.html", {"form": form})

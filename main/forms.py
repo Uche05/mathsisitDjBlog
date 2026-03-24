@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import Category, Post
+from .models import Category, Contact, Post
 
 
 class RegisterForm(UserCreationForm):
@@ -60,3 +60,30 @@ class PostForm(forms.ModelForm):
         if len(content) < 50:
             raise forms.ValidationError("Content must be at least 50 characters.")
         return content
+
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ("name", "email", "subject", "message")
+        
+        widgets = {
+            "name": forms.TextInput(
+                attrs={"placeholder": "Your Name", "class": "form-control"}
+            ),
+            "email": forms.EmailInput(
+                attrs={"placeholder": "your.email@example.com", "class": "form-control"}
+            ),
+            "subject": forms.TextInput(
+                attrs={"placeholder": "Subject of your message", "class": "form-control"}
+            ),
+            "message": forms.Textarea(
+                attrs={"placeholder": "Your message here...", "class": "form-control", "rows": 5}
+            ),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not field.widget.attrs.get('class'):
+                field.widget.attrs['class'] = 'form-control'
